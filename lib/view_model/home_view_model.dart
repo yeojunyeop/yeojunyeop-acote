@@ -11,6 +11,8 @@ class HomeViewModel extends GetxController {
 
   List<UserModel> userList = [];
   LaunchMode launchMode = LaunchMode.platformDefault;
+  final ScrollController scrollController = ScrollController();
+  bool isLoading = false;
 
   @override
   void onInit() async {
@@ -18,15 +20,28 @@ class HomeViewModel extends GetxController {
     if (Platform.isAndroid) {
       launchMode = LaunchMode.externalApplication;
     }
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent &&
+          isLoading == false) {
+        getUsers();
+      }
+    });
   }
 
-  Future<void> getUser() async {
-    try {
+  Future<void> getUsers() async {
+    if (userList.isEmpty) {
       userList = await Functions.instance.getUsersData();
+    } else {
+      isLoading = true;
       update();
-    } catch (e) {
-      debugPrint('errorMessage: $e');
+      List<UserModel> moreUserList =
+          await Functions.instance.getUsersData(userList.last.id!);
+      userList.addAll(moreUserList);
+      isLoading = false;
     }
+    update();
   }
 
   Future<void> launchAdUrl() async {

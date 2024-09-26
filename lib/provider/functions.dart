@@ -13,9 +13,13 @@ class Functions {
     dio = Dio();
   }
 
-  Future getUsersData() async {
-    var response = await dio.get('https://api.github.com/users');
-    print(response.data);
+  Future getUsersData([int lastUserId = 0]) async {
+    var response = await dio.get(
+      'https://api.github.com/users',
+      queryParameters: {
+        'since': lastUserId,
+      },
+    );
     List<UserModel> result = [];
     response.data.forEach((value) {
       result.add(UserModel.fromJson(value));
