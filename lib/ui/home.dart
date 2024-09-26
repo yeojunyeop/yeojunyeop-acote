@@ -47,19 +47,32 @@ class _HomeState extends State<Home> {
           child: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 120),
+                child: CustomScrollView(
                   controller: HomeViewModel.to.scrollController,
-                  itemCount: HomeViewModel.to.userList.length +
-                      (HomeViewModel.to.userList.length ~/ 10),
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index % 10 == 9) {
-                      return adTile();
-                    } else {
-                      int actualIndex = index - (index ~/ 10);
-                      return userTile(actualIndex);
-                    }
-                  },
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    CupertinoSliverRefreshControl(
+                      onRefresh: () {
+                        return HomeViewModel.to.pullToRefresh();
+                      },
+                    ),
+                    SliverPadding(
+                      padding: const EdgeInsets.only(bottom: 120),
+                      sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                        childCount: HomeViewModel.to.userList.length +
+                            (HomeViewModel.to.userList.length ~/ 10),
+                        (context, index) {
+                          if (index % 10 == 9) {
+                            return adTile();
+                          } else {
+                            int actualIndex = index - (index ~/ 10);
+                            return userTile(actualIndex);
+                          }
+                        },
+                      )),
+                    ),
+                  ],
                 ),
               ),
               if (HomeViewModel.to.isLoading)

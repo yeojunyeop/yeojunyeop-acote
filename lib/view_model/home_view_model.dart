@@ -44,6 +44,12 @@ class HomeViewModel extends GetxController {
     update();
   }
 
+  Future<void> pullToRefresh() async {
+    await Future.delayed(const Duration(seconds: 1));
+    userList.clear();
+    await getUsers();
+  }
+
   Future<void> launchAdUrl() async {
     Uri url = Uri.parse('https://taxrefundgo.kr');
     launchUrl(url, mode: launchMode);
