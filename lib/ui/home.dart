@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yeojunyeop_acote/ui/user_detail.dart';
 import 'package:yeojunyeop_acote/view_model/home_view_model.dart';
+import 'package:yeojunyeop_acote/view_model/user_detail_view_model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -52,9 +54,7 @@ class _HomeState extends State<Home> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     CupertinoSliverRefreshControl(
-                      onRefresh: () {
-                        return HomeViewModel.to.pullToRefresh();
-                      },
+                      onRefresh: () => HomeViewModel.to.pullToRefresh(),
                     ),
                     SliverPadding(
                       padding: const EdgeInsets.only(bottom: 120),
@@ -63,7 +63,9 @@ class _HomeState extends State<Home> {
                         childCount: HomeViewModel.to.userList.length +
                             (HomeViewModel.to.userList.length ~/ 10),
                         (context, index) {
-                          if (index % 10 == 9) {
+                          if (HomeViewModel.to.userList.isEmpty) {
+                            return const SizedBox.shrink();
+                          } else if (index % 10 == 9) {
                             return adTile();
                           } else {
                             int actualIndex = index - (index ~/ 10);
@@ -115,22 +117,31 @@ class _HomeState extends State<Home> {
   Widget userTile(int index) {
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: const Color(0xff17181a),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: const Color(0xff202125),
-                backgroundImage:
-                    NetworkImage(HomeViewModel.to.userList[index].avatar_url!),
-              ),
-              const SizedBox(width: 12),
-              Text(HomeViewModel.to.userList[index].login!,
-                  style:
-                      const TextStyle(color: Color(0xff989aa6), fontSize: 16)),
-            ],
+        InkWell(
+          splashFactory: NoSplash.splashFactory,
+          onTap: () => Get.to(
+              () =>
+                  UserDetail(userName: HomeViewModel.to.userList[index].login!),
+              binding: BindingsBuilder(() {
+            Get.put(UserDetailViewModel());
+          })),
+          child: Ink(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            color: const Color(0xff17181a),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: const Color(0xff202125),
+                  backgroundImage: NetworkImage(
+                      HomeViewModel.to.userList[index].avatar_url!),
+                ),
+                const SizedBox(width: 12),
+                Text(HomeViewModel.to.userList[index].login!,
+                    style: const TextStyle(
+                        color: Color(0xff989aa6), fontSize: 16)),
+              ],
+            ),
           ),
         ),
         Row(
