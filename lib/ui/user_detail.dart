@@ -35,16 +35,20 @@ class _UserDetailState extends State<UserDetail> {
         ),
         leading: TextButton(
           onPressed: () => Get.back(),
-          child: const Row(
-            children: [
-              SizedBox(
-                  width: 20,
-                  child: Icon(Icons.arrow_back_ios, color: Color(0xff2e8fff))),
-              Text(
-                '뒤로',
-                style: TextStyle(color: Color(0xff2e8fff), fontSize: 18),
-              ), // 텍스트 설정
-            ],
+          child: const SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                SizedBox(
+                    width: 20,
+                    child:
+                        Icon(Icons.arrow_back_ios, color: Color(0xff2e8fff))),
+                Text(
+                  '뒤로',
+                  style: TextStyle(color: Color(0xff2e8fff), fontSize: 18),
+                ), // 텍스트 설정
+              ],
+            ),
           ),
         ),
         title: const Text(
