@@ -52,6 +52,7 @@ class UserDetailModel {
     "Brainfuck": "#2F2530",
     "C Sharp": "#178600",
     "C": "#555555",
+    "C++": "#f34b7d",
     "Chapel": "#8dc63f",
     "Cirru": "#ccccff",
     "Clarion": "#db901e",
